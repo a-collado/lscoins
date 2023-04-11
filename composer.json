@@ -1,0 +1,27 @@
+{
+  "name": "student/lscoins",
+  "description": "Continuous Assessment 2",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Salle\\LSCoins\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Alex Collado Garrido",
+      "email": "a.collado@students.salle.url.edu"
+    }
+  ],
+  "require": {
+    "ext-pdo": "*",
+    "slim/slim": "4.10.0",
+    "slim/psr7": "1.5",
+    "slim/flash": "^0.4.0",
+    "php-di/slim-bridge": "^3.1",
+    "symfony/dotenv": "6.1",
+    "slim/twig-view": "3.3",
+    "ext-json": "*",
+    "dflydev/fig-cookies": "^3.0"
+  }
+}
