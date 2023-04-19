@@ -5,17 +5,13 @@ use DI\Container;
 use Slim\Flash\Messages;
 use Slim\Views\Twig;
 use Salle\LSCoins\Controller\HomeController;
-use Salle\LSCoins\Controller\VisitsController;
-use Salle\LSCoins\Controller\CookieMonsterController;
 use Salle\LSCoins\Controller\FlashController;
-use Salle\LSCoins\Controller\CreateUserController;
-use Salle\LSCoins\Controller\SimpleFormController;
-use Salle\LSCoins\Controller\LoginController;
-use Salle\LSCoins\Controller\RegisterController;
+use Salle\LSCoins\Controller\UserController;
+use Salle\LSCoins\Controller\ProfileController;
 use Salle\LSCoins\Model\MysqlUserRepository;
 use Salle\LSCoins\Model\PDOSingleton;
+use Salle\LSCoins\Middleware\AuthorizationMiddleware;
 use Psr\Container\ContainerInterface;
-
 
 $container = new Container();
 
@@ -43,28 +39,18 @@ $container->set(
     }
 );
 
+$container->set(
+    AuthorizationMiddleware::class,
+    function (ContainerInterface $c) {
+        $middleware = new AuthorizationMiddleware($c->get("flash"));
+        return $middleware;
+    }
+);
 
 $container->set(
     HomeController::class,
     function (ContainerInterface $c) {
-        $controller = new HomeController($c->get("view"), $c->get("flash"));
-        return $controller;
-    }
-);
-
-$container->set(
-    VisitsController::class,
-    function (ContainerInterface $c) {
-        $controller = new VisitsController($c->get("view"));
-        return $controller;
-    }
-);
-
-
-$container->set(
-    CookieMonsterController::class,
-    function (ContainerInterface $c) {
-        $controller = new CookieMonsterController($c->get("view"));
+        $controller = new HomeController($c->get("view"));
         return $controller;
     }
 );
@@ -82,41 +68,18 @@ $container->set(UserRepository::class, function (ContainerInterface $container) 
 });
 
 $container->set(
-    CreateUserController::class,
+    UserController::class,
     function (Container $c) {
-        $controller = new CreateUserController($c->get("view"), $c->get(UserRepository::class));
+        $controller = new UserController($c->get("view"), $c->get(UserRepository::class), $c->get("flash"));
         return $controller;
     }
 );
 
 $container->set(
-    SimpleFormController::class,
+    ProfileController::class,
     function (Container $c) {
-        $controller = new SimpleFormController($c->get("view"));
+        $controller = new ProfileController($c->get("view"));
         return $controller;
     }
 );
 
-$container->set(
-    FileController::class,
-    function (Container $c) {
-        $controller = new FileController($c->get("view"));
-        return $controller;
-    }
-);
-
-$container->set(
-    LoginController::class,
-    function (Container $c) {
-        $controller = new LoginController($c->get("view"));
-        return $controller;
-    }
-);
-
-$container->set(
-    RegisterController::class,
-    function (Container $c) {
-        $controller = new RegisterController($c->get("view"), $c->get(UserRepository::class));
-        return $controller;
-    }
-);

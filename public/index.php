@@ -36,6 +36,4 @@ $app->addErrorMiddleware(true, false, false);
 
 require_once __DIR__ . '/../config/routing.php';
 
-//addRoutes($app, $container);
-
 $app->run();

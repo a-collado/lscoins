@@ -5,33 +5,35 @@ namespace Salle\LSCoins\Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Slim\Flash\Messages;
 use Slim\Views\Twig;
 
 final class HomeController
 {
     private Twig $twig;
 
-    private Messages $flash;
 
     // You can also use https://stitcher.io/blog/constructor-promotion-in-php-8
-    public function __construct(Twig $twig, Messages $flash)
+    public function __construct(Twig $twig)
     {
         $this->twig = $twig;
-        $this->flash = $flash;
     }
 
-    public function apply(Request $request, Response $response)
+    public function showHome(Request $request, Response $response)
     {
-        $messages = $this->flash->getMessages();
 
-        $notifications = $messages['notifications'] ?? [];
+        if (isset($_SESSION['user']) && $_SESSION['user'] != null){
+            $parts = explode('@', $_SESSION['user']);
+            $parts_inv = array_reverse($parts);
+            $name = array_pop($parts_inv);
+        } else {
+            $name = 'stranger';
+        }
 
         return $this->twig->render(
             $response,
             'home.twig',
             [
-                'notifications' => $notifications
+                'username' => $name
             ]
         );
     }
